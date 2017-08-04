@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+
+  functional:
+    image: golang:1.7
+    volumes:
+      - .:/usr/src/myapp
+      - /tmp/go:/go
+    working_dir: /usr/src/myapp
+    environment:
+      - HOST_IP=${HOST_IP}
+      - SERVICE_PATH=${SERVICE_PATH}
+    command: bash -c "go get -d -v -t && go test ./... -v --run FunctionalTest"
+
+  production:
+    extends:
+      service: functional
+    command: bash -c "go get -d -v -t && go test ./... -v --run ProductionTest"
