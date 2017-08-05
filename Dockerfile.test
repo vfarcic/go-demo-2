@@ -4,7 +4,7 @@ MAINTAINER 	Viktor Farcic <viktor@farcic.com>
 
 COPY . /src
 WORKDIR /src
-RUN chmod +x /src/run-tests.sh
+RUN chmod +x /src/run-functional.sh
 RUN go get -d -v -t
 
 CMD ["sh", "-c", "/src/run-functional.sh"]
