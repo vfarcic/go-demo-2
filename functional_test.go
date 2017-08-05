@@ -35,7 +35,7 @@ func (s FunctionalTestSuite) Test_Hello_ReturnsStatus200() {
 	resp, err := http.Get(address)
 
 	s.NoError(err)
-	s.Equal(200, resp.StatusCode)
+	s.Equal(200, resp.StatusCode, "ADDR: ", address)
 }
 
 func (s FunctionalTestSuite) Test_Person_ReturnsStatus200() {
@@ -43,5 +43,5 @@ func (s FunctionalTestSuite) Test_Person_ReturnsStatus200() {
 	resp, err := http.Get(address)
 
 	s.NoError(err)
-	s.Equal(200, resp.StatusCode)
+	s.Equal(200, resp.StatusCode, "ADDR: %s", address)
 }
