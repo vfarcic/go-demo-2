@@ -14,13 +14,13 @@ services:
     command: bash -c "go get -d -v -t && go test ./... -v --run FunctionalTest"
 
   functional:
-    image: ${HUB_USER:-vfarcic}/go-demo-2-test:${TAG:-latest}
+    image: ${DOCKER_HUB_USER:-vfarcic}/go-demo-2-test:${TAG:-latest}
     environment:
       - HOST_IP=${HOST_IP}
       - SERVICE_PATH=${SERVICE_PATH}
 
   production:
-    image: ${HUB_USER:-vfarcic}/go-demo-2-test:${TAG:-latest}
+    image: ${DOCKER_HUB_USER:-vfarcic}/go-demo-2-test:${TAG:-latest}
     environment:
       - HOST_IP=${HOST_IP}
       - DURATION=${DURATION:-3}
