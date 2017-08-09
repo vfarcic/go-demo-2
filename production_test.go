@@ -32,17 +32,17 @@ func (s ProductionTestSuite) Test_Hello_ReturnsStatus200() {
 		max, _ := strconv.ParseFloat(os.Getenv("DURATION"), 64)
 		minutes := float64(0)
 		failures := 0
-		errorMsg := ""
+		counter := 0
 		for time.Since(start).Minutes() < max {
 			address := fmt.Sprintf("http://%s/demo/hello", s.hostIp)
 			resp, err := http.Get(address)
-
+			counter++
 			if err != nil {
 				failures++
-				errorMsg = err.Error()
+				println("Failed on request %d with error %s", counter, err.Error())
 			} else if resp == nil {
 				failures++
-				errorMsg = "Got no response"
+				println("Failed on request %d with no response", counter)
 			} else {
 				s.Equal(200, resp.StatusCode)
 			}
@@ -51,7 +51,7 @@ func (s ProductionTestSuite) Test_Hello_ReturnsStatus200() {
 				minutes++
 			}
 			if failures > 1 {
-				s.Fail(errorMsg)
+				s.Fail("Tests failed")
 			}
 		}
 	} else {
