@@ -23,5 +23,5 @@ services:
     image: ${HUB_USER:-vfarcic}/go-demo-2-test:${TAG:-latest}
     environment:
       - HOST_IP=${HOST_IP}
-      - DURATION=${DURATION:-10}
+      - DURATION=${DURATION:-3}
     command: bash -c "go get -d -v -t && go test ./... -v --run ProductionTest"
