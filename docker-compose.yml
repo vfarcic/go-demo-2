@@ -20,12 +20,8 @@ services:
       - SERVICE_PATH=${SERVICE_PATH}
 
   production:
-    image: golang:1.7
-    volumes:
-      - .:/usr/src/myapp
-      - /tmp/go:/go
-    working_dir: /usr/src/myapp
+    image: ${HUB_USER:-vfarcic}/go-demo-2-test:${TAG:-latest}
     environment:
       - HOST_IP=${HOST_IP}
-      - SERVICE_PATH=${SERVICE_PATH}
+      - DURATION=${DURATION:-10}
     command: bash -c "go get -d -v -t && go test ./... -v --run ProductionTest"
