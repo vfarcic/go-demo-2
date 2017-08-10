@@ -39,10 +39,10 @@ func (s ProductionTestSuite) Test_Hello_ReturnsStatus200() {
 			counter++
 			if err != nil {
 				failures++
-				println("Failed on request %d with error %s", counter, err.Error())
+				println(fmt.Sprintf("Failed on request %d with error %s", counter, err.Error()))
 			} else if resp == nil {
 				failures++
-				println("Failed on request %d with no response", counter)
+				println(fmt.Sprintf("Failed on request %d with no response", counter))
 			} else {
 				s.Equal(200, resp.StatusCode)
 			}
