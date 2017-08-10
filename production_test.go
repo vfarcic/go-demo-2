@@ -44,6 +44,7 @@ func (s ProductionTestSuite) Test_Hello_ReturnsStatus200() {
 				break
 			} else if resp.StatusCode != 200 {
 				s.Fail("Response status code is %d", resp.StatusCode)
+				break
 			}
 			if time.Since(start).Minutes() > minutes {
 				fmt.Printf("%2.0f out of %2.0f minutes passed\n", minutes, max)
