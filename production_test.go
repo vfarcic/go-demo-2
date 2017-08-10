@@ -37,13 +37,16 @@ func (s ProductionTestSuite) Test_Hello_ReturnsStatus200() {
 			resp, err := http.Get(address)
 			counter++
 			if err != nil {
-				s.Fail("Failed on request %d with error %s", counter, err.Error())
+				msg := fmt.Sprintf("Failed on request %d with error %s", counter, err.Error())
+				s.Fail(msg)
 				break
 			} else if resp == nil {
-				s.Fail("Failed on request %d with no response", counter)
+				msg := fmt.Sprintf("Failed on request %d with no response", counter)
+				s.Fail(msg)
 				break
 			} else if resp.StatusCode != 200 {
-				s.Fail("Response status code is %d", resp.StatusCode)
+				msg := fmt.Sprintf("Response status code is %d", resp.StatusCode)
+				s.Fail(msg)
 				break
 			}
 			if time.Since(start).Minutes() > minutes {
