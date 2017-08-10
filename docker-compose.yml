@@ -21,8 +21,6 @@ services:
 
   production:
     image: ${DOCKER_HUB_USER:-vfarcic}/go-demo-2-test:${TAG:-latest}
-    network:
-      - host
     environment:
       - HOST_IP=${HOST_IP}
       - DURATION=${DURATION:-3}
