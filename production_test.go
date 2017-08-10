@@ -53,6 +53,7 @@ func (s ProductionTestSuite) Test_Hello_ReturnsStatus200() {
 			if failures > 1 {
 				s.Fail("Tests failed")
 			}
+			time.Sleep(100 * time.Millisecond)
 		}
 	} else {
 		address := fmt.Sprintf("http://%s/demo/hello", s.hostIp)
