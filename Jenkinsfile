@@ -8,19 +8,16 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: "2"))
     disableConcurrentBuilds()
   }
+  environment {
+    SERVICE_PATH = "/demo-${env.BUILD_NUMBER}"
+    HOST_IP = [...] // This is AWS DNS
+    DOCKER_HUB_USER = [...] // This is Docker Hub user
+  }
   stages {
     stage("build") {
       steps {
-        script {
-          def dateFormat = new SimpleDateFormat("yy.MM.dd")
-          currentBuild.displayName = dateFormat.format(new Date()) + "-" + env.BUILD_NUMBER
-        }
         git "https://github.com/vfarcic/go-demo-2.git"
-        sh "docker image build -f Dockerfile.multistage -t vfarcic/go-demo-2 ."
-      }
-    }
-    stage("release") {
-      steps {
+        sh "docker image build -t ${env.DOCKER_HUB_USER}/go-demo-2:beta-${env.BUILD_NUMBER} ."
         withCredentials([usernamePassword(
           credentialsId: "docker",
           usernameVariable: "USER",
@@ -28,10 +25,46 @@ pipeline {
         )]) {
           sh "docker login -u $USER -p $PASS"
         }
-        sh "docker push vfarcic/go-demo-2"
-        sh "docker image tag vfarcic/go-demo-2 vfarcic/go-demo-2:${currentBuild.displayName}"
-        sh "docker push vfarcic/go-demo-2:${currentBuild.displayName}"
+        sh "docker push ${env.DOCKER_HUB_USER}/go-demo-2:beta-${env.BUILD_NUMBER}"
       }
+    }
+    stage("functional") {
+      steps {
+        sh "TAG=beta-${env.BUILD_NUMBER} docker stack deploy -c stack-test.yml go-demo-2-beta-${env.BUILD_NUMBER}"
+        sh "docker image build -f Dockerfile.test -t ${env.DOCKER_HUB_USER}/go-demo-2-test:${env.BUILD_NUMBER} ."
+        sh "docker image push ${env.DOCKER_HUB_USER}/go-demo-2-test:${env.BUILD_NUMBER}"
+        sh "TAG=${env.BUILD_NUMBER} docker-compose -p go-demo-2-${env.BUILD_NUMBER} run --rm functional"
+      }
+    }
+    // This is new
+    stage("release") {
+      steps {
+        sh "docker image tag ${env.DOCKER_HUB_USER}/go-demo-2:beta-${env.BUILD_NUMBER} ${env.DOCKER_HUB_USER}/go-demo-2:${env.BUILD_NUMBER}"
+        sh "docker image push $DOCKER_HUB_USER/go-demo-2:${env.BUILD_NUMBER}"
+      }
+    }
+    // This is new
+    stage("deploy") {
+      agent {
+        label "prod"
+      }
+      steps {
+        script {
+          try {
+            sh "docker service update --image $DOCKER_HUB_USER/go-demo-2:${env.BUILD_NUMBER} go-demo-2_main"
+            sh "TAG=${env.BUILD_NUMBER} docker-compose -p go-demo-2-${env.BUILD_NUMBER} run --rm production"
+          } catch (e) {
+            sh "docker service update --rollback go-demo-2_main"
+            error "Failed to update the service"
+          }
+        }
+      }
+    }
+  }
+  post {
+    always {
+      sh "docker stack rm go-demo-2-beta-${env.BUILD_NUMBER}"
+      sh "docker system prune -f"
     }
   }
 }
