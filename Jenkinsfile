@@ -12,7 +12,9 @@ pipeline {
     stage("checkout") {
       steps {
         script {
+          echo "111"
           def props = readProperties file: "/run/secrets/cluster-info.properties"
+          echo "222"
           env.HOST_IP = props.hostIp
           env.DOCKER_HUB_USER = props.dockerHubUser
         }
