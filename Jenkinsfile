@@ -16,6 +16,7 @@ pipeline {
           def props = readProperties file: "/run/secrets/cluster-info.properties"
           echo "222"
           env.HOST_IP = props.hostIp
+          echo "333"
           env.DOCKER_HUB_USER = props.dockerHubUser
         }
         scm checkout
