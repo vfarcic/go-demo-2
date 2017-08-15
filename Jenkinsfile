@@ -15,8 +15,8 @@ pipeline {
           def props = readProperties file: "/run/secrets/cluster-info.properties"
           env["HOST_IP"] = props.hostIp
           env["DOCKER_HUB_USER"] = props.dockerHubUser
-          scm.checkout
         }
+        scm.checkout
       }
     }
     stage("build") {
