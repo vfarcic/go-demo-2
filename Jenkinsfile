@@ -12,16 +12,11 @@ pipeline {
     stage("checkout") {
       steps {
         script {
-          echo "111"
           def props = readProperties file: "/run/secrets/cluster-info.properties"
-          echo "222"
           env.HOST_IP = props.hostIp
-          echo "333"
           env.DOCKER_HUB_USER = props.dockerHubUser
-          echo "444"
         }
         checkout scm
-        echo "555"
       }
     }
     stage("build") {
@@ -35,11 +30,17 @@ pipeline {
       }
     }
     stage("release") {
+      when {
+        branch "master"
+      }
       steps {
         dockerRelease("go-demo-2", env.DOCKER_HUB_USER)
       }
     }
     stage("deploy") {
+      when {
+        branch "master"
+      }
       agent {
         label "prod"
       }
