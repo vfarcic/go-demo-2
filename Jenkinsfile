@@ -16,7 +16,7 @@ pipeline {
           env["HOST_IP"] = props.hostIp
           env["DOCKER_HUB_USER"] = props.dockerHubUser
         }
-        scm.checkout
+        scm checkout
       }
     }
     stage("build") {
