@@ -18,8 +18,10 @@ pipeline {
           env.HOST_IP = props.hostIp
           echo "333"
           env.DOCKER_HUB_USER = props.dockerHubUser
+          echo "444"
         }
-        scm checkout
+        checkout scm
+        echo "555"
       }
     }
     stage("build") {
