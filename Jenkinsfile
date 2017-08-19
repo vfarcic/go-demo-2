@@ -17,6 +17,7 @@ pipeline {
           env.DOCKER_HUB_USER = props.dockerHubUser
         }
         checkout scm
+        stash name: "compose", includes: "docker-compose.yml"
       }
     }
     stage("build") {
@@ -45,6 +46,7 @@ pipeline {
         label "prod"
       }
       steps {
+        unstash "compose"
         dockerDeploy("go-demo-2", env.DOCKER_HUB_USER, env.HOST_IP, "/demo")
       }
     }
