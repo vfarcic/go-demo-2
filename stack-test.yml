@@ -9,6 +9,8 @@ services:
     networks:
       - proxy
       - default
+    healthcheck:
+      disable: true
     deploy:
       replicas: 3
       update_config:
