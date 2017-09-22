@@ -16,7 +16,6 @@ pipeline {
           env.HOST_IP = props.hostIp
           env.DOCKER_HUB_USER = props.dockerHubUser
         }
-        checkout scm
         stash name: "compose", includes: "docker-compose.yml"
       }
     }
