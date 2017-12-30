@@ -77,7 +77,7 @@ kind: Service
 metadata:
   name: go-demo-2-beta # Changed the name
 spec:
-  type: NodePort
+  type: NodePort # Added
   ports:
   - port: 8080
   selector:
