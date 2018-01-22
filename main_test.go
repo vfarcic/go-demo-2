@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/suite"
-	"gopkg.in/mgo.v2"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/suite"
+	"gopkg.in/mgo.v2"
 )
 
 // Suite
@@ -32,7 +33,6 @@ func TestMainUnitTestSuite(t *testing.T) {
 	httpListenAndServe = func(addr string, handler http.Handler) error { return nil }
 	suite.Run(t, new(MainTestSuite))
 }
-
 
 func (s *MainTestSuite) SetupTest() {}
 
